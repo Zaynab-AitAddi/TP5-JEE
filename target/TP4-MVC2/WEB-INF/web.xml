@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+    <display-name>Gestion des Produits - MVC2</display-name>
+    <description>Application de gestion de produits avec authentification et roles</description>
+
+    <!-- Welcome Files -->
+    <welcome-file-list>
+        <welcome-file>login</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- ============================================ -->
+    <!-- FILTRE 1: ENCODAGE UTF-8 (DOIT ETRE LE PREMIER) -->
+    <!-- ============================================ -->
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- ============================================ -->
+    <!-- FILTRE 2: AUTHENTIFICATION (APRES ENCODAGE) -->
+    <!-- ============================================ -->
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>web.filter.AuthenticationFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- ============================================ -->
+    <!-- SERVIETS D'AUTHENTIFICATION -->
+    <!-- ============================================ -->
+    
+    <!-- Servlet de Connexion -->
+    <servlet>
+        <servlet-name>login</servlet-name>
+        <servlet-class>web.servlet.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>login</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>login</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet d'Inscription -->
+    <servlet>
+        <servlet-name>signup</servlet-name>
+        <servlet-class>web.servlet.SignupServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>signup</servlet-name>
+        <url-pattern>/signup</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet de Déconnexion -->
+    <servlet>
+        <servlet-name>logout</servlet-name>
+        <servlet-class>web.servlet.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>logout</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+    <!-- ============================================ -->
+    <!-- SERVIETS DE GESTION DES PRODUITS -->
+    <!-- ============================================ -->
+
+    <!-- Servlet Dashboard (Liste des Produits) -->
+    <servlet>
+        <servlet-name>dashboard</servlet-name>
+        <servlet-class>web.servlet.DashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dashboard</servlet-name>
+        <url-pattern>/dashboard</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet Ajouter Produit -->
+    <servlet>
+        <servlet-name>addProduit</servlet-name>
+        <servlet-class>web.servlet.AddProduitServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>addProduit</servlet-name>
+        <url-pattern>/addProduit</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet Editer Produit -->
+    <servlet>
+        <servlet-name>editProduit</servlet-name>
+        <servlet-class>web.servlet.EditProduitServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>editProduit</servlet-name>
+        <url-pattern>/editProduit</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet Mettre a Jour Produit -->
+    <servlet>
+        <servlet-name>updateProduit</servlet-name>
+        <servlet-class>web.servlet.UpdateProduitServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>updateProduit</servlet-name>
+        <url-pattern>/updateProduit</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet Supprimer Produit -->
+    <servlet>
+        <servlet-name>deleteProduit</servlet-name>
+        <servlet-class>web.servlet.DeleteProduitServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>deleteProduit</servlet-name>
+        <url-pattern>/deleteProduit</url-pattern>
+    </servlet-mapping>
+
+    <!-- ============================================ -->
+    <!-- CONFIGURATION DES SESSIONS -->
+    <!-- ============================================ -->
+    <session-config>
+        <tracking-mode>COOKIE</tracking-mode>
+        <cookie-config>
+            <secure>false</secure>
+            <http-only>true</http-only>
+        </cookie-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <!-- ============================================ -->
+    <!-- PAGES D'ERREUR PERSONNALISEES -->
+    <!-- ============================================ -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/views/error/404.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/views/error/500.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>403</error-code>
+        <location>/WEB-INF/views/error/403.jsp</location>
+    </error-page>
+
+</web-app>

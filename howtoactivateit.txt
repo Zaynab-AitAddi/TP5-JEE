@@ -1,0 +1,42 @@
+# Kill Tomcat (stop Java)
+Get-Process -Name java -ErrorAction SilentlyContinue | Stop-Process -Force
+Start-Sleep -Seconds 2
+
+# Set environment variables
+$env:JAVA_HOME="C:\Program Files\Java\jdk-11"
+$env:Path="$env:JAVA_HOME\bin;$env:Path"
+
+$TOMCAT_HOME="C:\Tomcat"
+$env:CATALINA_HOME=$TOMCAT_HOME
+$env:CATALINA_BASE=$TOMCAT_HOME
+
+# Clean old build
+Remove-Item -Path ".\target" -Recurse -Force -ErrorAction SilentlyContinue
+
+# Build project
+mvn clean package
+
+# Find the generated WAR automatically
+$warFile = Get-ChildItem ".\target\*.war" | Select-Object -First 1
+
+if ($warFile -eq $null) {
+    Write-Host "❌ No WAR file found in target folder!" -ForegroundColor Red
+    exit
+}
+
+Write-Host "WAR found: $($warFile.Name)" -ForegroundColor Cyan
+
+# Copy & rename to TP5.war
+Copy-Item $warFile.FullName "$TOMCAT_HOME\webapps\TP5.war" -Force
+
+# Start Tomcat
+& "$TOMCAT_HOME\bin\startup.bat"
+
+# Wait for deployment
+Write-Host "Waiting for Tomcat to deploy..." -ForegroundColor Yellow
+Start-Sleep -Seconds 8
+
+# Open browser
+Start-Process "http://localhost:8080/TP5/"
+
+Write-Host "✅ Application deployed at: http://localhost:8080/TP5/" -ForegroundColor Green
